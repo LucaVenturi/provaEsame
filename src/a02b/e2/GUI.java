@@ -11,8 +11,11 @@ public class GUI extends JFrame {
     private static final long serialVersionUID = -6218820567019985015L;
     private final List<JButton> cells = new ArrayList<>();
     private int counter = 0;
+    private final Controller controller;
     
-    public GUI(int size) {
+    public GUI(int size, Controller controller) {
+        this.controller = controller;
+
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(50*size, 50*size);
         
@@ -21,6 +24,7 @@ public class GUI extends JFrame {
         
         ActionListener al = e -> {
         	this.cells.get(counter).setText(String.valueOf(counter++));
+            this.controller.buttonClicked();
         };
                 
         for (int i=0; i<size; i++){
@@ -32,7 +36,16 @@ public class GUI extends JFrame {
                 panel.add(jb);
             }
         }
+        Random random = new Random();
+        int startingCell = random.nextInt(size);
+        cells.get((size-1) * size + startingCell).setText("*");
+        
         this.setVisible(true);
+    }
+
+    public updateState() {
+        var position = controller.getAsteriskPosition();
+        this.cells.get()
     }
     
 }
