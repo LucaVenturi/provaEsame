@@ -29,23 +29,17 @@ public class UniversityProgramFactoryImpl implements UniversityProgramFactory {
 
             @Override
             boolean checkValid(Set<String> courseNames) {
-                boolean valid = true;
                 List<Course> validCourses = courses.stream().filter(c -> courseNames.contains(c.getName())).toList();
+
+                boolean valid = true;
                 valid = validCourses.stream().mapToInt(Course::getCredits).sum() == 60 ? true : false;
                 
-                boolean checkMaths = getCourseCredits(, Sector.MATHEMATICS) >= 12;
+                boolean checkMaths = getCourseCredits(validCourses, Sector.MATHEMATICS) >= 12;
 
-                boolean checkComputerScience = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.COMPUTER_SCIENCE))
-                    .mapToInt(Course::getCredits)
-                    .sum() >= 12;
+                boolean checkComputerScience = getCourseCredits(validCourses, Sector.COMPUTER_SCIENCE) >= 12;
 
-                boolean checkPhysics = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.PHYSICS))
-                    .mapToInt(Course::getCredits)
-                    .sum() >= 12;
+                boolean checkPhysics = getCourseCredits(validCourses, Sector.PHYSICS) >= 12;
+
                 return valid && checkMaths & checkComputerScience && checkPhysics;
             }
             
@@ -58,19 +52,15 @@ public class UniversityProgramFactoryImpl implements UniversityProgramFactory {
 
             @Override
             boolean checkValid(Set<String> courseNames) {
-                boolean valid = true;
-                valid = courses.stream().filter(c -> courseNames.contains(c.getName())).mapToInt(Course::getCredits).sum() >= 48 ? true : false;
-                int checkEngineering = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.COMPUTER_ENGINEERING))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                List<Course> validCourses = courses.stream().filter(c -> courseNames.contains(c.getName())).toList();
 
-                int checkComputerScience = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.COMPUTER_SCIENCE))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                boolean valid = true;
+                valid = validCourses.stream().mapToInt(Course::getCredits).sum() >= 48 ? true : false;
+
+                int checkEngineering = getCourseCredits(validCourses, Sector.COMPUTER_ENGINEERING);
+
+                int checkComputerScience = getCourseCredits(validCourses, Sector.COMPUTER_SCIENCE);
+
                 return valid && checkComputerScience + checkEngineering >= 30;
             }
             
@@ -83,32 +73,18 @@ public class UniversityProgramFactoryImpl implements UniversityProgramFactory {
 
             @Override
             boolean checkValid(Set<String> courseNames) {
+                List<Course> validCourses = courses.stream().filter(c -> courseNames.contains(c.getName())).toList();
+
                 boolean valid = true;
-                valid = courses.stream().filter(c -> courseNames.contains(c.getName())).mapToInt(Course::getCredits).sum() == 120 ? true : false;
+                valid = validCourses.stream().mapToInt(Course::getCredits).sum() == 120 ? true : false;
 
-                int checkCompEng = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.COMPUTER_ENGINEERING))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                int checkCompEng = getCourseCredits(validCourses, Sector.COMPUTER_ENGINEERING);
 
-                int checkCompScience = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.COMPUTER_SCIENCE))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                int checkCompScience = getCourseCredits(validCourses, Sector.COMPUTER_SCIENCE);
 
-                int checkPhysics = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.PHYSICS))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                int checkPhysics = getCourseCredits(validCourses, Sector.PHYSICS);
 
-                int checkMaths = courses.stream()
-                    .filter(c -> courseNames.contains(c.getName()))
-                    .filter(c -> c.getSector().equals(Sector.MATHEMATICS))
-                    .mapToInt(Course::getCredits)
-                    .sum();
+                int checkMaths = getCourseCredits(validCourses, Sector.MATHEMATICS);
 
                 return valid && (checkCompScience + checkCompEng >= 60) && (checkMaths + checkPhysics <= 18);
             }
